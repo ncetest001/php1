@@ -1,7 +1,7 @@
 node('java-slave-1') {
   stage('Prepare') {
       sh 'rm -rf NCE-WEB-TEST'
-      sh "git clone ssh://git@g.hz.netease.com:22222/CloudQA/NCE-WEB-TEST.git"     
+      sh "git clone https://github.com/sanqianaa/apitest1"     
   }
   stage('check image') {
         sh 'echo hello1 >> yuz1'
