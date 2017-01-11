@@ -5,6 +5,7 @@ node('java-slave-1') {
   }
   stage('check image') {
         sh 'echo hello1 >> yuz1'
+        sh 'pwd'
   }
   stage('upgrade service') {
         sh 'echo hello2 >> yuz2'
