@@ -1,20 +1,24 @@
 node('java-slave-1') {
   stage('Prepare') {
-    withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'gitlab',
-      usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
-      sh 'rm -rf java-demo'
-      sh "git clone http://'${USERNAME}':'${PASSWORD}'@139.129.99.183:10080/root/java-demo.git"     
-    }
+   
+      sh 'rm -rf NCE-WEB-TEST'
+      sh "git clone ssh://git@g.hz.netease.com:22222/CloudQA/NCE-WEB-TEST.git"     
+    
   }
-  stage('check image’){
-…
-}
+  stage('check image’) {
+      
+  }
   stage('upgrade service') {
-    …
+
    }
-  
-  
   stage('ci test') {
-    …
   }
+
+  def getOpenAPIToken(app_key, app_secret) {
+    sh "curl  \
+        -H "Content-Type: application/json" \
+        -X POST -d '{"app_key":"${app_key}","app_secret":"${app_secret}"}'\
+        http://10.180.156.17:10000/api/v1/token"
+   }
+
  }
