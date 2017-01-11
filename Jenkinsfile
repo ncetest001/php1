@@ -3,7 +3,7 @@ node('java-slave-1') {
       sh 'rm -rf NCE-WEB-TEST'
       sh "git clone ssh://git@g.hz.netease.com:22222/CloudQA/NCE-WEB-TEST.git"     
   }
-  stage('check image’) {
+  stage('check image') {
         sh 'echo hello1 >> yuz1'
   }
   stage('upgrade service') {
