@@ -9,7 +9,6 @@ node('java-slave-1') {
         sh 'pwd'
   }
   stage('upgrade service') {
-        notifySlack("a","a")
         sh 'echo hello2 >> yuz2'
    }
   stage('ci test') {
