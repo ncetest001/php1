@@ -21,7 +21,7 @@ node('java-slave-1') {
       def header  = 'Content-Type:application/json'
       def payload = JsonOutput.toJson([app_key      : app_key,
                                        app_secret   : app_secret])
-      sh "curl -X POST -H \'${header}\' -d \'${payload}\' ${combURL} > json"
+      sh "curl -X POST -H \'${header}\' -d \'${payload}\' ${combTokenURL} > json"
       sh 'cat json |grep -Po \'(?<="token":")[^"]*\' > token'
       def token=readFile('token').trim()
       echo "$token"
@@ -29,7 +29,7 @@ node('java-slave-1') {
     def getCombImageTagNum(token, repoName) {
       def combGetImageURL = 'http://115.238.123.127:10000/api/v1/microservices/images'
       def header  = 'Authorization:Token ${token}'
-      sh "curl -H \'${header}\'  ${combURL} > json"
+      sh "curl -H \'${header}\'  ${combGetImageURL} > json"
       sh 'cat json | grep -Po \'(?<="repo_name":")[^"]*\' | grep ${repoName} | wc -l> tagNum'
       echo "$tagNum"
      }
