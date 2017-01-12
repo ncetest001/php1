@@ -12,7 +12,6 @@ node('java-slave-1') {
    }
   stage('ci test') {
         sh "curl -H 'Content-Type:application/json' -X POST -d '{"app_key":"${app_key}","app_secret":"${app_secret}"}' http://115.238.123.127:10000/api/v1/token"
-        getOpenAPIToken("3e4321b66be945a48599eeaa53099057","4c6f9a7a37a942529adb526a4a0114b0")
   }
 }
   def getOpenAPIToken(app_key, app_secret) {
