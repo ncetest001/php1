@@ -20,8 +20,9 @@ node('java-slave-1') {
    }
 
     def getOpenAPIToken2(app_key, app_secret) {
-    def combURL = 'http://115.238.123.127:10000/api/v1/token'
-    def payload = JsonOutput.toJson([app_key      : app_key,
-                                     app_secret   : app_secret])
-    sh "curl -X POST -H \'Content-Type:application/json\' -d \'${payload}\' ${combURL}"
+      def combURL = 'http://115.238.123.127:10000/api/v1/token'
+      def header  = 'Content-Type:application/json'
+      def payload = JsonOutput.toJson([app_key      : app_key,
+                                       app_secret   : app_secret])
+      sh "curl -X POST -H \'${header}\' -d \'${payload}\' ${combURL}"
      }
