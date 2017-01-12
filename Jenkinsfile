@@ -18,12 +18,12 @@ node('java-slave-1') {
 }
     def getCombToken(app_key, app_secret) {
       def combTokenURL = 'http://115.238.123.127:10000/api/v1/token'
-      def header  = 'Content-Type:application/json'
+      def header = 'Content-Type:application/json'
       def payload = JsonOutput.toJson([app_key      : app_key,
                                        app_secret   : app_secret])
       sh "curl -X POST -H \'${header}\' -d \'${payload}\' ${combTokenURL} > json"
       sh 'cat json |grep -Po \'(?<="token":")[^"]*\' > token'
-      def token=readFile('token').trim()
+      def token = readFile('token').trim()
       echo "$token"
      }
     def getCombImageTagNum(token, repoName) {
@@ -31,6 +31,7 @@ node('java-slave-1') {
       def header  = 'Authorization:Token ${token}'
       sh "curl -H \'${header}\'  ${combGetImageURL} > json"
       sh 'cat json | grep -Po \'(?<="repo_name":")[^"]*\' | grep ${repoName} | wc -l> tagNum'
+      def tagNum = readFile('tagNum').trim()
       echo "$tagNum"
      }
     def createCombService(imagePath) {
