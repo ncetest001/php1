@@ -13,7 +13,7 @@ node('java-slave-1') {
    }
   stage('ci test') {
        def token = getCombToken("3e4321b66be945a48599eeaa53099057","4c6f9a7a37a942529adb526a4a0114b0")
-       getCombImage(token,"ci")
+       getCombImageTagNum(token,"ci")
   }
 }
     def getCombToken(app_key, app_secret) {
@@ -33,3 +33,8 @@ node('java-slave-1') {
       sh 'cat json | grep -Po \'(?<="repo_name":")[^"]*\' | grep ${repoName} | wc -l> tagNum'
       echo "$tagNum"
      }
+    def createCombService(imagePath) {
+      def combCreateServiceURL= 'http://115.238.123.127:10000/api/v1/microservices'
+      def header = 'Authorization:Token ${token}'
+      sh "curl -X POST -H \'${header}\' -d  \'${payload}\' ${combTokenURL} > json"
+    }
