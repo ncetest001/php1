@@ -1,3 +1,4 @@
+import groovy.json.JsonOutput
 node('java-slave-1') {
   stage('Prepare') {
       sh 'rm -rf hooktest'
