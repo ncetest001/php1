@@ -22,7 +22,7 @@ node('java-slave-1') {
       def payload = JsonOutput.toJson([app_key      : app_key,
                                        app_secret   : app_secret])
       sh "curl -X POST -H \'${header}\' -d \'${payload}\' ${combURL} > json"
-      sh 'cat json |grep -Po '(?<="token":")[^"]*' > token'
+      sh 'cat json |grep -Po \'(?<="token":")[^"]*\' > token'
       def token=readFile('token').trim()
       echo "$token"
      }
