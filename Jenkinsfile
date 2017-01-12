@@ -13,7 +13,7 @@ node('java-slave-1') {
    }
   stage('ci test') {
        def token = getCombToken("3e4321b66be945a48599eeaa53099057","4c6f9a7a37a942529adb526a4a0114b0")
-       def getCombImage(token,ci)
+       getCombImage(token,ci)
   }
 }
     def getCombToken(app_key, app_secret) {
