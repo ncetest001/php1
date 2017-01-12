@@ -13,11 +13,11 @@ node('java-slave-1') {
    }
   stage('ci test') {
        def token = getCombToken("3e4321b66be945a48599eeaa53099057","4c6f9a7a37a942529adb526a4a0114b0")
-       getCombImage(token,ci)
+       getCombImage(token,"ci")
   }
 }
     def getCombToken(app_key, app_secret) {
-      def combURL = 'http://115.238.123.127:10000/api/v1/token'
+      def combTokenURL = 'http://115.238.123.127:10000/api/v1/token'
       def header  = 'Content-Type:application/json'
       def payload = JsonOutput.toJson([app_key      : app_key,
                                        app_secret   : app_secret])
@@ -26,8 +26,10 @@ node('java-slave-1') {
       def token=readFile('token').trim()
       echo "$token"
      }
-    def getCombImage(token, repoName) {
-      def combURL = 'http://115.238.123.127:10000/api/v1/microservices/images'
+    def getCombImageTagNum(token, repoName) {
+      def combGetImageURL = 'http://115.238.123.127:10000/api/v1/microservices/images'
       def header  = 'Authorization:Token ${token}'
-      sh "curl -X POST -H \'${header}\' -d \'${payload}\' ${combURL}"
+      sh "curl -H \'${header}\'  ${combURL} > json"
+      sh 'cat json | grep -Po \'(?<="repo_name":")[^"]*\' | grep ${repoName} | wc -l> tagNum'
+      echo "$tagNum"
      }
