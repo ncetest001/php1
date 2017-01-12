@@ -8,6 +8,7 @@ node('java-slave-1') {
         sh 'pwd'
   }
   stage('upgrade service') {
+        notifySlack("a","a")
         sh 'echo hello2 >> yuz2'
    }
   stage('ci test') {
@@ -17,3 +18,12 @@ node('java-slave-1') {
   def getOpenAPIToken(app_key, app_secret) {
     sh "curl -H \'Content-Type:application/json\' -X POST -d \'{"app_key":"${app_key}","app_secret":"${app_secret}"}\' http://115.238.123.127:10000/api/v1/token"
    }
+
+    def notifySlack(text, channel) {
+    def slackURL = 'https://hooks.slack.com/services/xxxxxxx/yyyyyyyy/zzzzzzzzzz'
+    def payload = JsonOutput.toJson([text      : text,
+                                     channel   : channel,
+                                     username  : "jenkins",
+                                     icon_emoji: ":jenkins:"])
+    sh "curl -X POST --data-urlencode \'payload=${payload}\' ${slackURL}"
+     }
