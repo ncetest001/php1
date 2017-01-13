@@ -16,7 +16,6 @@ node('java-slave-4') {
        waitImageReady
        
     }
-  }
 //将最新的镜像部署成服务
   stage('upgrade service') {
         sh 'echo hello2 >> yuz2'
