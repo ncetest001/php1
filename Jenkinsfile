@@ -64,7 +64,7 @@ node('java-slave-4') {
       def header = "Authorization:Token ${token}"
       sh "curl -X DELETE -H \'${header}\' ${combTokenURL} > json"
     }
-    def waitImageReady(token){
+    def waitImageReady(token,repoName){
             long startTime = System.currentTimeMillis()
 		boolean flag = false
 		try {
