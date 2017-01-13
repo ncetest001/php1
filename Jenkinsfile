@@ -69,7 +69,7 @@ node('java-slave-4') {
 		boolean flag = false
 		try {
 		      while (System.currentTimeMillis() - startTime < 600) {
-		      theLatestTag = getCombImageLatestTag(token,repoName")
+		      theLatestTag = getCombImageLatestTag(token,repoName)
 			      println("the latest tag is: " +theLatestTag)
 		          if (theLatestTag - tag > 0){
 				      println("the latestTag -tag >0")
