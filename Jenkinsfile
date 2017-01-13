@@ -3,7 +3,9 @@ node('java-slave-4') {
       def repoName = "ci"
       def token = getCombToken("3e4321b66be945a48599eeaa53099057","4c6f9a7a37a942529adb526a4a0114b0")
       def originTag = getCombImageLatestTag(token,"ci")
-      println("##The original image tag is : "+originTag)
+      def BUILDTIMEOUT = 40 * 60 * 1000L
+      def CREATESERVICETIMEOUT = 10 * 60 * 1000L
+      println("##The original image tag is : "+originTag
 //准备测试代码与工具      
   stage('Prepare') {
       sh 'pwd'
@@ -68,7 +70,6 @@ node('java-slave-4') {
 		boolean flag = false
 		try {
 		      while (System.currentTimeMillis() - startTime < 600) {
-			      println("yuzwww"+startTime+"yuz"+System.currentTimeMillis())
 		      theLatestTag = getCombImageLatestTag(token,repoName)
 			      println("the latest tag is: " +theLatestTag)
 		          if (theLatestTag != originTag){
@@ -79,6 +80,8 @@ node('java-slave-4') {
 				      println("the latestTag -tag =0")
                               	      sleep 10				
 				 }
+			      			      println("yuzwww"+startTime+"yuz"+System.currentTimeMillis())
+
 		       }
 	    	  if (false == flag)
    		     println("Image is timeout")
