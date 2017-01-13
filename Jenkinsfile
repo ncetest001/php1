@@ -8,7 +8,7 @@ node('java-slave-4') {
   }
   stage('check image') {
        def token = getCombToken("3e4321b66be945a48599eeaa53099057","4c6f9a7a37a942529adb526a4a0114b0")
-       getCombImageTagNum(token,"ci")
+       getCombImageTag(token,"ci")
   }
   stage('upgrade service') {
         sh 'echo hello2 >> yuz2'
