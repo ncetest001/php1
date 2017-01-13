@@ -1,7 +1,8 @@
 import groovy.json.JsonOutput
-node('java-slave-2') {
+node('java-slave-3') {
   stage('Prepare') {
       sh 'pwd'
+      sh 'apt-get update -y ; apt-get install jq'
       sh 'rm -rf hooktest'
       sh "git clone ssh://yu.zhang@git.hz.netease.com:22222/yu.zhang/hooktest.git"     
   }
