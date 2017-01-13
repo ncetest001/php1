@@ -67,7 +67,6 @@ node('java-slave-4') {
             long startTime = System.currentTimeMillis()
 		boolean flag = false
 		try {
-		      Thread.sleep(SLEEP);
 		      while (System.currentTimeMillis() - startTime < 600) {
                           theLatestTag = getCombImageLatestTag(token, ${repoName})
 		          if (theLatestTag - tag > 0){
@@ -78,8 +77,8 @@ node('java-slave-4') {
 				 }
 			  }
 		        }
-		  if (false == flag)
-	          println("Image is timeout")
+	    	  if (false == flag){
+			  println("Image is timeout")}
 		} catch (Exception e) {
 			log.info(e)
 		} finally {	
