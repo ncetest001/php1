@@ -49,18 +49,18 @@ node('java-slave-4') {
           
     def createCombService(imagePath) {
       def combCreateServiceURL= 'http://115.238.123.127:10000/api/v1/microservices'
-      def header = 'Authorization:Token ${token}'
+      def header = "Authorization:Token ${token}"
       sh "curl -X POST -H \'${header}\' -d  \'${payload}\' ${combTokenURL} > json"
     }
           
     def getCombService(id) {
       def combCreateServiceURL= 'http://115.238.123.127:10000/api/v1/microservices'
-      def header = 'Authorization:Token ${token}'
+      def header = "Authorization:Token ${token}"
       sh "curl -X POST -H \'${header}\' -d  \'${payload}\' ${combTokenURL} > json"
     }
     def deleteCombService(id) {
       def combDeleteServiceURL= 'http://115.238.123.127:10000/api/v1/microservices/${id}'
-      def header = 'Authorization:Token ${token}'
+      def header = "Authorization:Token ${token}"
       sh "curl -X DELETE -H \'${header}\' ${combTokenURL} > json"
     }
     def waitImageReady(){
@@ -68,11 +68,14 @@ node('java-slave-4') {
 		boolean flag = false
 		try {
 		      while (System.currentTimeMillis() - startTime < 600) {
-                          theLatestTag = getCombImageLatestTag(token, ${repoName})
+		      theLatestTag = getCombImageLatestTag(${token}, ${repoName})
+			      println("the latest tag is: " +${theLatestTag})
 		          if (theLatestTag - tag > 0){
+				      println("the latestTag -tag >0")
                               	      flag = true
 				      break
 		          } else {
+				      println("the latestTag -tag =0")
                               	      sleep 10				
 				 }
 		       }
