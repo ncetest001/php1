@@ -1,9 +1,8 @@
 import groovy.json.JsonOutput
 node('java-slave-4') {
       def token = getCombToken("3e4321b66be945a48599eeaa53099057","4c6f9a7a37a942529adb526a4a0114b0")
-      println("yuzyuz"+token)
       originTag = getCombImageLatestTag(token,"ci")
-      println("yuzyuz2"+originTag)
+      println("The original image tag is : "+originTag)
   stage('Prepare') {
       sh 'pwd'
       sh 'apt-get update -y ; apt-get install jq'
@@ -34,13 +33,13 @@ node('java-slave-4') {
       def token = readFile('token').trim()
       return token
      }
-    def getCombImageLatestTag(token, repoName) {
+    def String getCombImageLatestTag(token, repoName) {
       def combGetImageURL = 'http://115.238.123.127:10000/api/v1/microservices/images'
       def header  = "Authorization:Token ${token}"
       sh "curl -H \'${header}\'  ${combGetImageURL} > json"
       sh 'jq \'.[][] | select(.repo_name=="ci") | .tag\' json |  sed -n \'1p\' '
       def tag = readFile('tag').trim()
-      echo "$tag"
+      return tag
      }
     def createCombService(imagePath) {
       def combCreateServiceURL= 'http://115.238.123.127:10000/api/v1/microservices'
