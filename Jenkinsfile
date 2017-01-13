@@ -33,7 +33,7 @@ node('java-slave-4') {
      }
     def getCombImageLatestTag(token, repoName) {
       def combGetImageURL = 'http://115.238.123.127:10000/api/v1/microservices/images'
-      def header  = 'Authorization:Token ${token}'
+      def header  = "Authorization:Token ${token}"
       sh "curl -H \'${header}\'  ${combGetImageURL} > json"
       sh 'jq \'.[][] | select(.repo_name=="ci") | .tag\' json |  sed -n \'1p\' '
       def tag = readFile('tag').trim()
