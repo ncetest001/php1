@@ -5,9 +5,9 @@ node('java-slave-4') {
       def originTag = getCombImageLatestTag(token,"ci")
       def BUILDTIMEOUT = 40 * 60 * 1000L
       def CREATESERVICETIMEOUT = 10 * 60 * 1000L
-      println("##The original image tag is : "+originTag
+      println("##The original image tag is : "+originTag)
 //准备测试代码与工具      
-  stage('Prepare') {
+  stage('prepare') {
       sh 'pwd'
 //      sh 'apt-get update -y ; apt-get install jq'
       sh 'rm -rf hooktest'
