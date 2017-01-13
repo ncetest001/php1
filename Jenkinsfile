@@ -75,12 +75,11 @@ node('java-slave-4') {
 		          } else {
                               	      sleep 10				
 				 }
-			  }
-		        }
-	    	  if (false == flag){
-			  println("Image is timeout")}
+		       }
+	    	  if (false == flag)
+   		     println("Image is timeout")
 		} catch (Exception e) {
-			log.info(e)
+			println(e)
 		} finally {	
                 }
     }
