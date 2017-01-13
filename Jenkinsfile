@@ -14,7 +14,7 @@ node('java-slave-2') {
    }
   stage('ci test') {
         sh 'cd /home/jenkins/workspace/apitest1/hooktest/NCE-WEB-TEST/'
-        sh 'mvn clean -f ./NCE-WEB-TEST/pom.xml test -Dmaven.test.failure.ignore=true -DsuitXmlFile=./hooktest/NCE-WEB-TEST/src/test/resources/xml/microserviceopenapi.xml'
+        sh 'mvn clean -f NCE-WEB-TEST/pom.xml test -Dmaven.test.failure.ignore=true -DsuitXmlFile=./hooktest/NCE-WEB-TEST/src/test/resources/xml/microserviceopenapi.xml'
   }
 }
     def getCombToken(app_key, app_secret) {
