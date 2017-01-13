@@ -28,13 +28,13 @@ node('java-slave-4') {
       def token = readFile('token').trim()
       echo "$token"
      }
-    def getCombImageTagNum(token, repoName) {
+    def getCombImageLatestTag(token, repoName) {
       def combGetImageURL = 'http://115.238.123.127:10000/api/v1/microservices/images'
       def header  = 'Authorization:Token ${token}'
       sh "curl -H \'${header}\'  ${combGetImageURL} > json"
-      sh 'cat json | grep -Po \'(?<="repo_name":")[^"]*\' | grep ${repoName} | wc -l> tagNum'
-      def tagNum = readFile('tagNum').trim()
-      echo "$tagNum"
+      sh 'jq \'.[][] | select(.repo_name=="ci") | .tag\' json |  sed -n \'1p\' '
+      def tag = readFile('tag').trim()
+      echo "$tag"
      }
     def createCombService(imagePath) {
       def combCreateServiceURL= 'http://115.238.123.127:10000/api/v1/microservices'
