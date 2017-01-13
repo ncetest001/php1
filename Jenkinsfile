@@ -32,7 +32,7 @@ node('java-slave-4') {
       sh "curl -X POST -H \'${header}\' -d \'${payload}\' ${combTokenURL} > json"
       sh 'cat json |grep -Po \'(?<="token":")[^"]*\' > token'
       def token = readFile('token').trim()
-      echo "$token"
+      return $token
      }
     def getCombImageLatestTag(token, repoName) {
       def combGetImageURL = 'http://115.238.123.127:10000/api/v1/microservices/images'
