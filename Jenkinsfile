@@ -13,8 +13,7 @@ node('java-slave-4') {
   }
 //等待由gitpush触发的镜像构建完成
   stage('check image') {
-	  println("##yuz"+token+repoName)
-       waitImageReady(token,repoName)
+       waitImageReady(token,repoName,originTag)
        
     }
 //将最新的镜像部署成服务
@@ -64,14 +63,14 @@ node('java-slave-4') {
       def header = "Authorization:Token ${token}"
       sh "curl -X DELETE -H \'${header}\' ${combTokenURL} > json"
     }
-    def waitImageReady(token,repoName){
+    def waitImageReady(token,repoName,originTag){
             long startTime = System.currentTimeMillis()
 		boolean flag = false
 		try {
 		      while (System.currentTimeMillis() - startTime < 600) {
 		      theLatestTag = getCombImageLatestTag(token,repoName)
 			      println("the latest tag is: " +theLatestTag)
-		          if (theLatestTag - tag > 0){
+		          if (theLatestTag - originTag > 0){
 				      println("the latestTag -tag >0")
                               	      flag = true
 				      break
