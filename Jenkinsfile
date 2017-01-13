@@ -53,4 +53,3 @@ node('java-slave-4') {
       def header = 'Authorization:Token ${token}'
       sh "curl -X DELETE -H \'${header}\' ${combTokenURL} > json"
     }
-    def waitfor
