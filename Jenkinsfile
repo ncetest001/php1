@@ -20,6 +20,7 @@ node('java-slave-4') {
         sh 'cd /home/jenkins/workspace/apitest1/hooktest/NCE-WEB-TEST/'
         sh 'mvn clean -f hooktest/NCE-WEB-TEST/pom.xml test -Dmaven.test.failure.ignore=true -DsuitXmlFile=./hooktest/NCE-WEB-TEST/src/test/resources/xml/microserviceopenapi.xml'
   }
+}
     def getCombToken(app_key, app_secret) {
       def combTokenURL = 'http://115.238.123.127:10000/api/v1/token'
       def header = 'Content-Type:application/json'
