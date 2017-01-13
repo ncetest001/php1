@@ -12,7 +12,7 @@ node('java-slave-2') {
         sh 'echo hello2 >> yuz2'
    }
   stage('ci test') {
-
+        sh 'cd /home/jenkins/workspace/apitest1/hooktest/NCE-WEB-TEST/'
         sh 'mvn clean test -Dmaven.test.failure.ignore=true -DsuitXmlFile=./hooktest/NCE-WEB-TEST/src/test/resources/xml/microserviceopenapi.xml'
   }
 }
