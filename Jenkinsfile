@@ -13,7 +13,7 @@ node('java-slave-4') {
   }
 //等待由gitpush触发的镜像构建完成
   stage('check image') {
-       waitImageReady
+       waitImageReady()
        
     }
 //将最新的镜像部署成服务
