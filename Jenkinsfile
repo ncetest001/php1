@@ -1,8 +1,9 @@
 import groovy.json.JsonOutput
 node('java-slave-4') {
       def token = getCombToken("3e4321b66be945a48599eeaa53099057","4c6f9a7a37a942529adb526a4a0114b0")
+            println(token)
       originTag = getCombImageLatestTag(token,"ci")
-  
+      println(originTag)
   stage('Prepare') {
       sh 'pwd'
       sh 'apt-get update -y ; apt-get install jq'
@@ -12,6 +13,7 @@ node('java-slave-4') {
   stage('check image') {
     timeout(600){
        tag = getCombImageLatestTag(token,"ci") 
+             println(Tag)
     }
   }
   stage('upgrade service') {
