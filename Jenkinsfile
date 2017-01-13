@@ -37,7 +37,8 @@ node('java-slave-4') {
       def combGetImageURL = 'http://115.238.123.127:10000/api/v1/microservices/images'
       def header  = "Authorization:Token ${token}"
       sh "curl -H \'${header}\'  ${combGetImageURL} > json"
-      return sh 'jq \'.[][] | select(.repo_name=="ci") | .tag\' json |  sed -n \'1p\' '
+      sh 'jq \'.[][] | select(.repo_name=="ci") | .tag\' json |  sed -n \'1p\' > tag'
+      def tag = readFile('tag').trim()
      }
     def createCombService(imagePath) {
       def combCreateServiceURL= 'http://115.238.123.127:10000/api/v1/microservices'
