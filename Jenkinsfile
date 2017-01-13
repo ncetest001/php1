@@ -1,19 +1,19 @@
 import groovy.json.JsonOutput
-node('java-slave-1') {
+node('java-slave-2') {
   stage('Prepare') {
       sh 'rm -rf hooktest'
       sh "git clone ssh://yu.zhang@git.hz.netease.com:22222/yu.zhang/hooktest.git"     
   }
   stage('check image') {
-        sh 'echo hello1 >> yuz1'
-        sh 'pwd'
+       def token = getCombToken("3e4321b66be945a48599eeaa53099057","4c6f9a7a37a942529adb526a4a0114b0")
+       getCombImageTagNum(token,"ci")
   }
   stage('upgrade service') {
         sh 'echo hello2 >> yuz2'
    }
   stage('ci test') {
-       def token = getCombToken("3e4321b66be945a48599eeaa53099057","4c6f9a7a37a942529adb526a4a0114b0")
-       getCombImageTagNum(token,"ci")
+        sh 'export M2_HOME=/home/qatest/tools/apache-maven-3.3.3; export M2=$M2_HOME/bin;export PATH=$M2:$PATH'
+        sh 'mvn clean test -Dmaven.test.failure.ignore=true -DsuitXmlFile=./hooktest/NCE-WEB-TEST/src/test/resources/xml/microserviceopenapi.xml'
   }
 }
     def getCombToken(app_key, app_secret) {
@@ -38,4 +38,14 @@ node('java-slave-1') {
       def combCreateServiceURL= 'http://115.238.123.127:10000/api/v1/microservices'
       def header = 'Authorization:Token ${token}'
       sh "curl -X POST -H \'${header}\' -d  \'${payload}\' ${combTokenURL} > json"
+    }
+    def getCombService(id) {
+      def combCreateServiceURL= 'http://115.238.123.127:10000/api/v1/microservices'
+      def header = 'Authorization:Token ${token}'
+      sh "curl -X POST -H \'${header}\' -d  \'${payload}\' ${combTokenURL} > json"
+    }
+    def deleteCombService(id) {
+      def combDeleteServiceURL= 'http://115.238.123.127:10000/api/v1/microservices/${id}'
+      def header = 'Authorization:Token ${token}'
+      sh "curl -X DELETE -H \'${header}\' ${combTokenURL} > json"
     }
