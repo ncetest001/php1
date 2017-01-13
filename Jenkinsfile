@@ -7,7 +7,7 @@ node('java-slave-4') {
 //准备测试代码与工具      
   stage('Prepare') {
       sh 'pwd'
-      sh 'apt-get update -y ; apt-get install jq'
+//      sh 'apt-get update -y ; apt-get install jq'
       sh 'rm -rf hooktest'
       sh "git clone ssh://yu.zhang@git.hz.netease.com:22222/yu.zhang/hooktest.git"  
   }
