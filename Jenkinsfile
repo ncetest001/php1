@@ -12,7 +12,7 @@ node('java-slave-2') {
         sh 'echo hello2 >> yuz2'
    }
   stage('ci test') {
-        sh 'export M2_HOME=/home/qatest/tools/apache-maven-3.3.3; export M2=$M2_HOME/bin;export PATH=$M2:$PATH'
+
         sh 'mvn clean test -Dmaven.test.failure.ignore=true -DsuitXmlFile=./hooktest/NCE-WEB-TEST/src/test/resources/xml/microserviceopenapi.xml'
   }
 }
