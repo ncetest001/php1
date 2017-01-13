@@ -4,11 +4,11 @@ node('java-slave-4') {
       sh 'pwd'
       sh 'apt-get update -y ; apt-get install jq'
       sh 'rm -rf hooktest'
-      sh "git clone ssh://yu.zhang@git.hz.netease.com:22222/yu.zhang/hooktest.git"     
+      sh "git clone ssh://yu.zhang@git.hz.netease.com:22222/yu.zhang/hooktest.git"  
+      def token = getCombToken("3e4321b66be945a48599eeaa53099057","4c6f9a7a37a942529adb526a4a0114b0")
       originTag = getCombImageLatestTag(token,"ci")
   }
   stage('check image') {
-       def token = getCombToken("3e4321b66be945a48599eeaa53099057","4c6f9a7a37a942529adb526a4a0114b0")
     timeout(600){
        tag = getCombImageLatestTag(token,"ci") 
     }
