@@ -1,5 +1,5 @@
 import groovy.json.JsonOutput
-node('java-slave-3') {
+node('java-slave-4') {
   stage('Prepare') {
       sh 'pwd'
       sh 'apt-get update -y ; apt-get install jq'
