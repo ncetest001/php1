@@ -60,13 +60,6 @@ node('java-slave-4') {
       def header = "Authorization:Token ${token}"
       sh "curl -X POST -H \'${header}\' -d  \'${payload}\' ${combTokenURL} > json"
     }
-{
-    "min_ready_seconds": 20,
-    "container_images": [{
-        "container_id":712,
-        "image_path": "hub.c.163.com/nce2/mariadb"
-    }]
-}
 
     def updateCombServiceImage(microserviceId,container_id,image_path)
       def combCreateServiceURL= "http://115.238.123.127:10000 /api/v1/microservices/${microserviceId}/actions/update-image"
