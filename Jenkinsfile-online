@@ -17,15 +17,15 @@ node('java-slave-1') {
       sh "git clone ssh://yu.zhang@git.hz.netease.com:22222/yu.zhang/hooktest.git"  
   }
 //等待由gitpush触发的镜像构建完成
-  stage('check image') {
-       def boolean isready = waitImageReady(token,repoName,originPath)  	
-    if(!isready){  
-	  return newPath = getCombImageLatestPath(token,"ci")
-	  println("##The new Path is : "+newPath)
-    }else{
-	  println("##Failed to get the image")
-    }
-  }
+//  stage('check image') {
+//       def boolean isready = waitImageReady(token,repoName,originPath)  	
+//    if(isready){  
+	  //return newPath = getCombImageLatestPath(token,"ci")
+	  //println("##The new Path is : "+newPath)
+    //}else{
+	//  println("##Failed to get the image")
+    //}
+  //}
 //将最新的镜像部署成服务
   stage('upgrade service') {
 	updateCombServiceImage(token,microserviceId,container_id,newPath)
