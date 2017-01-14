@@ -26,13 +26,13 @@ node('java-slave-1') {
   //}
 //将最新的镜像部署成服务
   stage('upgrade service') {
-	        println("###########################1)
+	        println("###########################1")
 	def status_code = updateCombServiceImage(token,microserviceId,container_id,newPath)
-				println("###########################2)
+				println("###########################2")
 	assert status_code == "200"
-				println("###########################3)
+				println("###########################3")
 	waitCombServiceReady(token,microserviceId)
-				println("###########################4)
+				println("###########################4")
 
   }
 //等待服务创建成功
