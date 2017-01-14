@@ -66,8 +66,8 @@ node('java-slave-4') {
     def updateCombServiceImage(microserviceId,container_id,image_path)
       def combCreateServiceURL= "http://115.238.123.127:10000 /api/v1/microservices/${microserviceId}/actions/update-image"
       def header = "Authorization:Token ${token}"
-      def payload = JsonOutput.toJson([min_ready_seconds      : "20",
-                                       container_images   : [{
+      def payload = JsonOutput.toJson([min_ready_seconds  : "20",
+                                       container_images   : [[
 					      "container_id":${container_id},
 					      "image_path": ${image_path}] 
 				      ])
