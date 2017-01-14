@@ -2,10 +2,10 @@ import groovy.json.JsonOutput
 node('java-slave-4') {
       def repoName = "ci"
       def token = getCombToken("3e4321b66be945a48599eeaa53099057","4c6f9a7a37a942529adb526a4a0114b0")
-      def originTag = getCombImageLatestTag(token,"ci")
+      def originPath = getCombImageLatestPath(token,"ci")
       def BUILDTIMEOUT = 40 * 60 * 1000L
       def CREATESERVICETIMEOUT = 10 * 60 * 1000L
-      println("##The original image tag is : "+originTag)
+      println("##The original image path is : "+originPath)
 //准备测试代码与工具      
   stage('prepare') {
       sh 'pwd'
@@ -15,13 +15,16 @@ node('java-slave-4') {
   }
 //等待由gitpush触发的镜像构建完成
   stage('check image') {
-       waitImageReady(token,repoName,originTag)
-       
+       def boolean isready = waitImageReady(token,repoName,originPath)  
+	  if(!isready){
+	  	
+	  }
     }
 //将最新的镜像部署成服务
   stage('upgrade service') {
-        sh 'echo hello2 >> yuz2'
-   }
+	
+	waitCombServiceReady(token,microserviceId)
+  }
 //等待服务创建成功
 //执行测试      
   stage('ci test') {
@@ -40,13 +43,13 @@ node('java-slave-4') {
       return token
      }
           
-    def String getCombImageLatestTag(token, repoName) {
+    def String getCombImageLatestPath(token, repoName) {
       def combGetImageURL = 'http://115.238.123.127:10000/api/v1/microservices/images'
       def header  = "Authorization:Token ${token}"
       sh "curl -H \'${header}\'  ${combGetImageURL} > json"
-      sh 'jq -r \'.[][] | select(.repo_name=="ci") | .tag\' json |  sed -n \'1p\' > tag'
-      def tag = readFile('tag').trim()
-      return tag
+      sh 'jq -r \'.[][] | select(.repo_name=="ci") | .image_path\' json |  sed -n \'1p\' > image_path'
+      def image_path = readFile('image_path').trim()
+      return image_path
      }
           
     def createCombService(imagePath) {
@@ -55,38 +58,66 @@ node('java-slave-4') {
       sh "curl -X POST -H \'${header}\' -d  \'${payload}\' ${combTokenURL} > json"
     }
           
-    def getCombService(id) {
-      def combCreateServiceURL= 'http://115.238.123.127:10000/api/v1/microservices'
+    def String getCombServiceStatus(microserviceId) {
+      def combCreateServiceURL= "http://115.238.123.127:10000/api/v1/microservices/${microserviceId}"
       def header = "Authorization:Token ${token}"
-      sh "curl -X POST -H \'${header}\' -d  \'${payload}\' ${combTokenURL} > json"
+      sh "curl  -H \'${header}\'  ${combTokenURL} > json"
+      sh 'cat json | jq -r .service_info.status'
+      def status = readFile('json').trim()
+      return status
     }
-    def deleteCombService(id) {
-      def combDeleteServiceURL= 'http://115.238.123.127:10000/api/v1/microservices/${id}'
+    def String deleteCombService(microserviceId) {
+      def combDeleteServiceURL= "http://115.238.123.127:10000api/v1/microservices/${microserviceId}?free_ip=false"
       def header = "Authorization:Token ${token}"
-      sh "curl -X DELETE -H \'${header}\' ${combTokenURL} > json"
+      sh "curl -X DELETE -H \'${header}\' ${combTokenURL} > json"  
+      sh 'cat json | jq .code >　code'
+      def code = readfILE.('code').trim()
+      return code
     }
-    def waitImageReady(token,repoName,originTag){
+    def boolean waitImageReady(token,repoName,originPath){
             long startTime = System.currentTimeMillis()
 		boolean flag = false
 		try {
 		      while (System.currentTimeMillis() - startTime < 60*10*1000) {
-		      theLatestTag = getCombImageLatestTag(token,repoName)
-			      println("the latest tag is: " +theLatestTag)
-		          if (theLatestTag != originTag){
-				      println("the latestTag -tag >0")
+		      theLatestPath = getCombImageLatestPath(token,repoName)
+		          if (theLatestPath != originPath){
+				      println("##The new image is ready !!")
                               	      flag = true
 				      break
 		          } else {
-				      println("the latestTag -tag =0")
+				      println("##The new image is not ready")
                               	      sleep 10				
 				 }
-		      println("yuzwww"+startTime+"yuz"+System.currentTimeMillis())
-
 		       }
 	    	  if (false == flag)
-   		     println("Image is timeout")
+   		     println("##Image is timeout")
 		} catch (Exception e) {
 			println(e)
-		} finally {	
-                }
+			flag = false
+		} 
+	    return flag
+    }
+    def boolean waitCombServiceReady(token,microserviceId){
+            long startTime = System.currentTimeMillis()
+		boolean flag = false
+		try {
+		      while (System.currentTimeMillis() - startTime < 60*10*1000) {
+		      currentStatus = getCombServiceStatus(microserviceId)
+		          if (currentStatus == "creating"){
+				      println("##The new service is creating !!")
+                              	      sleep 10
+				      
+		          } else {
+				      println("##The service is ready")
+				      assert currentStatus == "create_succ"
+                              	      flag = true				
+				 }
+		       }
+	    	     if (false == flag)
+   		     println("##Service is timeout")
+		} catch (Exception e) {
+			println(e)
+			flag = false
+		} 	        
+       return flag
     }
