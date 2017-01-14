@@ -19,15 +19,16 @@ node('java-slave-1') {
 //等待由gitpush触发的镜像构建完成
   stage('check image') {
        def boolean isready = waitImageReady(token,repoName,originPath)  	
-    if(isready){  
+    if(!isready){  
 	  return newPath = getCombImageLatestPath(token,"ci")
+	  println("##The new Path is : "+newPath)
     }else{
 	  println("##Failed to get the image")
     }
   }
 //将最新的镜像部署成服务
   stage('upgrade service') {
-	updateCombServiceImage(microserviceId,container_id,newPath)
+	updateCombServiceImage(token,microserviceId,container_id,newPath)
 	waitCombServiceReady(token,microserviceId)
   }
 //等待服务创建成功
@@ -63,7 +64,7 @@ node('java-slave-1') {
       sh "curl -X POST -H \'${header}\' -d  \'${payload}\' ${combTokenURL} > json"
     }
 
-    def updateCombServiceImage(microserviceId,container_id,image_path){
+    def updateCombServiceImage(token,microserviceId,container_id,image_path){
       def combCreateServiceURL= "https://open.c.163.com /api/v1/microservices/${microserviceId}/actions/update-image"
       def header = "Authorization:Token ${token}"
       def payload = JsonOutput.toJson([min_ready_seconds  : "20",
