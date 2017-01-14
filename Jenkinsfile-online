@@ -56,23 +56,17 @@ node('java-slave-1') {
       sh 'jq -r \'.[][] | select(.repo_name=="ci") | .image_path\' json |  sed -n \'1p\' > image_path'
       def image_path = readFile('image_path').trim()
       return image_path
-     }
-          
-    def createCombService(imagePath) {
-      def combCreateServiceURL= 'https://open.c.163.com/api/v1/microservices'
-      def header = "Authorization:Token ${token}"
-      sh "curl -X POST -H \'${header}\' -d  \'${payload}\' ${combTokenURL} > json"
-    }
+     }      
 
     def updateCombServiceImage(token,microserviceId,container_id,image_path){
-      def combCreateServiceURL= "https://open.c.163.com /api/v1/microservices/${microserviceId}/actions/update-image"
+      def updateCombServiceURL= "https://open.c.163.com /api/v1/microservices/${microserviceId}/actions/update-image"
       def header = "Authorization:Token ${token}"
       def payload = JsonOutput.toJson([min_ready_seconds  : "20",
                                        container_images   : [[
 					      "container_id":${container_id},
 					      "image_path": ${image_path}]] 
 				      ])
-      sh "curl -X PUT -H \'${header}\' -d \'${payload}\' ${combTokenURL} > json"
+      sh "curl -X PUT -H \'${header}\' -d \'${payload}\' ${updateCombServiceURL} > json"
     }
           
     def String getCombServiceStatus(microserviceId) {
