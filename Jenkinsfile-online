@@ -12,9 +12,7 @@ node('java-slave-1') {
 //准备测试代码与工具      
   stage('prepare') {
       sh 'pwd'
-//      sh 'apt-get update -y ; apt-get install jq'
-      sh 'rm -rf hooktest'
-      sh "git clone ssh://yu.zhang@git.hz.netease.com:22222/yu.zhang/hooktest.git"  
+//      sh 'apt-get update -y ; apt-get install jq' 
   }
 //等待由gitpush触发的镜像构建完成
 //  stage('check image') {
@@ -28,14 +26,20 @@ node('java-slave-1') {
   //}
 //将最新的镜像部署成服务
   stage('upgrade service') {
+	        println("###########################1)
 	def status_code = updateCombServiceImage(token,microserviceId,container_id,newPath)
+				println("###########################2)
 	assert status_code == "200"
+				println("###########################3)
 	waitCombServiceReady(token,microserviceId)
+				println("###########################4)
+
   }
 //等待服务创建成功
 //执行测试      
   stage('ci test') {
-        sh 'cd /home/jenkins/workspace/apitest1/hooktest/NCE-WEB-TEST/'
+        sh 'rm -rf hooktest'
+        sh "git clone ssh://yu.zhang@git.hz.netease.com:22222/yu.zhang/hooktest.git" 
         sh 'mvn clean -f hooktest/NCE-WEB-TEST/pom.xml test -Dmaven.test.failure.ignore=true -DsuitXmlFile=./hooktest/NCE-WEB-TEST/src/test/resources/xml/microserviceopenapi.xml'
   }
 }
