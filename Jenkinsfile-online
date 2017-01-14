@@ -7,7 +7,7 @@ node('java-slave-1') {
       def container_id = 53448   //微服务的容器id
       def token = getCombToken("076d22a2166f4bbfa3daf4bc40b2e25a","c4d6ad2379d24d2fb3e97f9632171708")//用户:qaqance_pub
       def originPath = getCombImageLatestPath(token,"ci")//原始镜像
-      def newPath 
+      def newPath = "hub.c.163.com/netease_comb/ci:master20170114030036705"    //需要去掉值
       println("##The original image path is : "+originPath)
 //准备测试代码与工具      
   stage('prepare') {
@@ -28,7 +28,8 @@ node('java-slave-1') {
   //}
 //将最新的镜像部署成服务
   stage('upgrade service') {
-	updateCombServiceImage(token,microserviceId,container_id,newPath)
+	def status_code = updateCombServiceImage(token,microserviceId,container_id,newPath)
+	assert status_code == "200"
 	waitCombServiceReady(token,microserviceId)
   }
 //等待服务创建成功
@@ -58,15 +59,18 @@ node('java-slave-1') {
       return image_path
      }      
 
-    def updateCombServiceImage(token,microserviceId,container_id,image_path){
-      def updateCombServiceURL= "https://open.c.163.com /api/v1/microservices/${microserviceId}/actions/update-image"
-      def header = "Authorization:Token ${token}"
+    def String updateCombServiceImage(token,microserviceId,container_id,image_path){
+      def updateCombServiceURL= "https://open.c.163.com/api/v1/microservices/${microserviceId}/actions/update-image"
+      def header1 = "Authorization:Token ${token}"
+      def header2 = 'Content-Type:application/json'
       def payload = JsonOutput.toJson([min_ready_seconds  : "20",
                                        container_images   : [[
 					      "container_id":container_id,
 					      "image_path": image_path]] 
 				      ])
-      sh "curl -X PUT -H \'${header}\' -d \'${payload}\' ${updateCombServiceURL} > json"
+      sh "curl -X PUT -H \'${header1}\' -H \'${header2}\' -d \'${payload}\' \'${updateCombServiceURL}\' -i | sed -n \'1p\' | awk \'{print$2}\' > status_code"
+      def status_code = readFile('status_code').trim()
+      return status_code
     }
           
     def String getCombServiceStatus(microserviceId) {
