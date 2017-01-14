@@ -68,7 +68,7 @@ node('java-slave-1') {
 					      "container_id":container_id,
 					      "image_path": image_path]] 
 				      ])
-      sh "curl -X PUT -H \'${header1}\' -H \'${header2}\' -d \'${payload}\' \'${updateCombServiceURL}\' -i | sed -n \'1p\' | awk \'{print$2}\' > status_code"
+      sh "curl -X PUT -H \'${header1}\' -H \'${header2}\' -d \'${payload}\' \'${updateCombServiceURL}\' -i | sed -n \'1p\' | awk \'{print\$2}\' > status_code"
       def status_code = readFile('status_code').trim()
       return status_code
     }
