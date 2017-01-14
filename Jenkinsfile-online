@@ -27,7 +27,7 @@ node('java-slave-1') {
   }
 //将最新的镜像部署成服务
   stage('upgrade service') {
-	createCombService(microserviceId)
+	updateCombServiceImage(microserviceId,container_id,newPath)
 	waitCombServiceReady(token,microserviceId)
   }
 //等待服务创建成功
@@ -119,13 +119,13 @@ node('java-slave-1') {
 		try {
 		      while (System.currentTimeMillis() - startTime < 60*10*1000) {
 		      currentStatus = getCombServiceStatus(microserviceId)
-		          if (currentStatus == "creating"){
-				      println("##The new service is creating !!")
+		          if (currentStatus == "updating"||currentStatus == "create_succ"||currentStatus == "update_succ"){
+				      println("##The new service is updating !!")
                               	      sleep 10
 				      
 		          } else {
+				      assert currentStatus == "update_succ"
 				      println("##The service is ready")
-				      assert currentStatus == "create_succ"
                               	      flag = true				
 				 }
 		       }
