@@ -1,11 +1,10 @@
 import groovy.json.JsonOutput
-
 node('java-slave-4') {
       def repoName = "ci"
-      def microserviceId = 
-      def container_id = 
+      def microserviceId = 53443 //微服务yuztestenv
+      def container_id = 53448   //微服务的容器id
       def token = getCombToken("3e4321b66be945a48599eeaa53099057","4c6f9a7a37a942529adb526a4a0114b0")
-      def originPath = getCombImageLatestPath(token,"ci")
+      def originPath = getCombImageLatestPath(token,"ci")//原始镜像
       def newPath 
       println("##The original image path is : "+originPath)
 //准备测试代码与工具      
