@@ -1,10 +1,11 @@
 import groovy.json.JsonOutput
 node('java-slave-4') {
       def repoName = "ci"
+      def microserviceId = 
+      def container_id = 
       def token = getCombToken("3e4321b66be945a48599eeaa53099057","4c6f9a7a37a942529adb526a4a0114b0")
       def originPath = getCombImageLatestPath(token,"ci")
-      def BUILDTIMEOUT = 40 * 60 * 1000L
-      def CREATESERVICETIMEOUT = 10 * 60 * 1000L
+      def newPath 
       println("##The original image path is : "+originPath)
 //准备测试代码与工具      
   stage('prepare') {
@@ -15,14 +16,16 @@ node('java-slave-4') {
   }
 //等待由gitpush触发的镜像构建完成
   stage('check image') {
-       def boolean isready = waitImageReady(token,repoName,originPath)  
-	  if(!isready){
-	  	
-	  }
+       def boolean isready = waitImageReady(token,repoName,originPath)  	
+    if(isready){  
+	  return newPath = getCombImageLatestPath(token,"ci")
+    }else{
+	  println("##Failed to get the image")
     }
+  }
 //将最新的镜像部署成服务
   stage('upgrade service') {
-	
+	createCombService(microserviceId)
 	waitCombServiceReady(token,microserviceId)
   }
 //等待服务创建成功
@@ -56,6 +59,24 @@ node('java-slave-4') {
       def combCreateServiceURL= 'http://115.238.123.127:10000/api/v1/microservices'
       def header = "Authorization:Token ${token}"
       sh "curl -X POST -H \'${header}\' -d  \'${payload}\' ${combTokenURL} > json"
+    }
+{
+    "min_ready_seconds": 20,
+    "container_images": [{
+        "container_id":712,
+        "image_path": "hub.c.163.com/nce2/mariadb"
+    }]
+}
+
+    def updateCombServiceImage(microserviceId,container_id,image_path)
+      def combCreateServiceURL= "http://115.238.123.127:10000 /api/v1/microservices/${microserviceId}/actions/update-image"
+      def header = "Authorization:Token ${token}"
+      def payload = JsonOutput.toJson([min_ready_seconds      : "20",
+                                       container_images   : [{
+					      "container_id":${container_id},
+					      "image_path": ${image_path}] 
+				      ])
+      sh "curl -X PUT -H \'${header}\' -d \'${payload}\' ${combTokenURL} > json"
     }
           
     def String getCombServiceStatus(microserviceId) {
