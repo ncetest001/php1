@@ -69,7 +69,7 @@ node('java-slave-4') {
       def payload = JsonOutput.toJson([min_ready_seconds  : "20",
                                        container_images   : [[
 					      "container_id":${container_id},
-					      "image_path": ${image_path}] 
+					      "image_path": ${image_path}]] 
 				      ])
       sh "curl -X PUT -H \'${header}\' -d \'${payload}\' ${combTokenURL} > json"
     }
