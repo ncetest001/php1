@@ -26,14 +26,10 @@ node('java-slave-1') {
   //}
 //将最新的镜像部署成服务
   stage('upgrade service') {
-	        println("###########################1")
 	def status_code = updateCombServiceImage(token,microserviceId,container_id,newPath)
-				println("###########################2")
 	assert status_code == "200"
-				println("###########################3")
-	waitCombServiceReady(token,microserviceId)
-				println("###########################4")
-
+	def isready = waitCombServiceReady(token,microserviceId)
+	assert isready 
   }
 //等待服务创建成功
 //执行测试      
@@ -77,7 +73,7 @@ node('java-slave-1') {
       return status_code
     }
           
-    def String getCombServiceStatus(microserviceId) {
+    def String getCombServiceStatus(token, microserviceId) {
       def combCreateServiceURL= "https://open.c.163.com/api/v1/microservices/${microserviceId}"
       def header = "Authorization:Token ${token}"
       sh "curl  -H \'${header}\'  ${combTokenURL} > json"
@@ -121,7 +117,7 @@ node('java-slave-1') {
 		boolean flag = false
 		try {
 		      while (System.currentTimeMillis() - startTime < 60*10*1000) {
-		      currentStatus = getCombServiceStatus(microserviceId)
+		      currentStatus = getCombServiceStatus(token, microserviceId)
 		          if (currentStatus == "updating"||currentStatus == "create_succ"||currentStatus == "update_succ"){
 				      println("##The new service is updating !!")
                               	      sleep 10
