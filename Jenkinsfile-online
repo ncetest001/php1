@@ -63,8 +63,8 @@ node('java-slave-1') {
       def header = "Authorization:Token ${token}"
       def payload = JsonOutput.toJson([min_ready_seconds  : "20",
                                        container_images   : [[
-					      "container_id":${container_id},
-					      "image_path": ${image_path}]] 
+					      "container_id":container_id,
+					      "image_path": image_path]] 
 				      ])
       sh "curl -X PUT -H \'${header}\' -d \'${payload}\' ${updateCombServiceURL} > json"
     }
