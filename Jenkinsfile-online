@@ -76,7 +76,7 @@ node('java-slave-1') {
     def String getCombServiceStatus(token, microserviceId) {
       def combCreateServiceURL= "https://open.c.163.com/api/v1/microservices/${microserviceId}"
       def header = "Authorization:Token ${token}"
-      sh "curl  -H \'${header}\'  ${combTokenURL} > json"
+      sh "curl  -H \'${header}\'  ${combCreateServiceURL} > json"
       sh 'cat json | jq -r .service_info.status'
       def status = readFile('json').trim()
       return status
@@ -84,7 +84,7 @@ node('java-slave-1') {
     def String deleteCombService(microserviceId) {
       def combDeleteServiceURL= "https://open.c.163.com/api/v1/microservices/${microserviceId}?free_ip=false"
       def header = "Authorization:Token ${token}"
-      sh "curl -X DELETE -H \'${header}\' ${combTokenURL} > json"  
+      sh "curl -X DELETE -H \'${header}\' ${combDeleteServiceURL} > json"  
       sh 'cat json | jq .code >　code'
       def code = readfILE.('code').trim()
       return code
