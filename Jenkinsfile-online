@@ -27,7 +27,7 @@ node('java-slave-1') {
 //将最新的镜像部署成服务
   stage('upgrade service') {
 	def status_code = updateCombServiceImage(token,microserviceId,container_id,newPath)
-	println(status_code)
+	println("#######"+status_code)
 	assert status_code == "200"
 	def isready = waitCombServiceReady(token,microserviceId)
 	assert isready 
@@ -80,6 +80,7 @@ node('java-slave-1') {
       sh "curl  -H \'${header}\'  ${combCreateServiceURL} > json"
       sh 'cat json | jq -r .service_info.status'
       def status = readFile('json').trim()
+      println("##service status is "+status_code)
       return status
     }
     def String deleteCombService(microserviceId) {
