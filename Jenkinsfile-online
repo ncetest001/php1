@@ -14,16 +14,16 @@ node('java-slave-1') {
       sh 'pwd'
 //      sh 'apt-get update -y ; apt-get install jq' 
   }
-//等待由gitpush触发的镜像构建完成
-//  stage('check image') {
-//       def boolean isready = waitImageReady(token,repoName,originPath)  	
-//    if(isready){  
-	  //return newPath = getCombImageLatestPath(token,"ci")
-	  //println("##The new Path is : "+newPath)
-    //}else{
-	//  println("##Failed to get the image")
-    //}
-  //}
+等待由gitpush触发的镜像构建完成
+  stage('check image') {
+       def boolean isready = waitImageReady(token,repoName,originPath)  	
+    if(isready){  
+	  return newPath = getCombImageLatestPath(token,"ci")
+	  println("##The new Path is : "+newPath)
+    }else{
+	  println("##Failed to get the image")
+    }
+  }
 //将最新的镜像部署成服务
   stage('upgrade service') {
 	def status_code = updateCombServiceImage(token,microserviceId,container_id,newPath)
