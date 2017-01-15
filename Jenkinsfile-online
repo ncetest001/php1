@@ -120,9 +120,10 @@ node('java-slave-1') {
 		try {
 		      while (System.currentTimeMillis() - startTime < 60*10*1000) {
 		      currentStatus = getCombServiceStatus(token, microserviceId)
-		          if (currentStatus == "updating"||currentStatus == "create_succ"||currentStatus == "update_succ"){
+		      sleep 10 //
+		          if (currentStatus == "updating"||currentStatus == "create_succ"){
 				      println("##The new service is updating !!")
-                              	      sleep 10
+                              	      sleep 5
 				      
 		          } else {
 				      assert currentStatus == "update_succ"
