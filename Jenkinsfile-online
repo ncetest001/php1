@@ -7,7 +7,7 @@ node('java-slave-1') {
       def container_id = 53448   //微服务的容器id
       sh 'apt-get update -y ; apt-get install jq' 
       def token = getCombToken("076d22a2166f4bbfa3daf4bc40b2e25a","c4d6ad2379d24d2fb3e97f9632171708")//用户:qaqance_pub
-      def originPath = readFile('originPath').trim()
+      def originPath = readFile('/home/jenkins/workspace/data/originPath').trim()
       //def originPath = getCombImageLatestPath(token,"ci")//原始镜像
       println("##The original image path is : "+originPath)
 //准备测试代码与工具      
@@ -21,7 +21,7 @@ node('java-slave-1') {
        def boolean isready = waitImageReady(token,repoName,originPath)  	
     if(isready){  
 	  return newPath = getCombImageLatestPath(token,"ci")
-	    sh "'${newPath}' > originPath"
+	    sh "echo '${newPath}' > /home/jenkins/workspace/data/originPath"
 	  println("##The new Path is : "+newPath)
     }else{
 	  println("##Failed to get the image")
