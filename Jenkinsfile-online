@@ -38,6 +38,7 @@ node('java-slave-1') {
         sh 'mvn clean -f hooktest/NCE-WEB-TEST/pom.xml test -Dmaven.test.failure.ignore=true -DsuitXmlFile=./hooktest/NCE-WEB-TEST/src/test/resources/xml/microserviceopenapi.xml'
   }
 }
+
     def String getCombToken(app_key, app_secret) {
       def combTokenURL = 'https://open.c.163.com/api/v1/token'
       def header = 'Content-Type:application/json'
