@@ -72,8 +72,6 @@ node('java-slave-1') {
       def status_code = readFile('status_code').trim()
       return status_code
     }
-          
-    def String getCombServiceStatus(token, microserviceId) {
       def combCreateServiceURL= "https://open.c.163.com/api/v1/microservices/${microserviceId}"
       def header = "Authorization:Token ${token}"
       sh "curl  -H \'${header}\'  ${combCreateServiceURL} > json"
