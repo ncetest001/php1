@@ -2,14 +2,13 @@
 
 import groovy.json.JsonOutput
 node('java-slave-1') {
-      System.getProperty('BUILD_TIMESTAMP')
       def repoName = "ci"
       def microserviceId = 53443 //微服务yuztestenv
       def container_id = 53448   //微服务的容器id
       sh 'apt-get update -y ; apt-get install jq' 
       def token = getCombToken("076d22a2166f4bbfa3daf4bc40b2e25a","c4d6ad2379d24d2fb3e97f9632171708")//用户:qaqance_pub
-      def originPath = getCombImageLatestPath(token,"ci")//原始镜像
-      //def newPath = "hub.c.163.com/netease_comb/ci:master20170114030036705"    //需要去掉值
+      def originPath = readFile('originPath').trim()
+      //def originPath = getCombImageLatestPath(token,"ci")//原始镜像
       println("##The original image path is : "+originPath)
 //准备测试代码与工具      
   stage('prepare') {
@@ -22,6 +21,7 @@ node('java-slave-1') {
        def boolean isready = waitImageReady(token,repoName,originPath)  	
     if(isready){  
 	  return newPath = getCombImageLatestPath(token,"ci")
+	    sh "'${newPath}' > originPath"
 	  println("##The new Path is : "+newPath)
     }else{
 	  println("##Failed to get the image")
