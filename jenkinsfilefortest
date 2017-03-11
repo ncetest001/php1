@@ -15,12 +15,10 @@ node('java-slave-1') {
        assert isready
        newPath = getCombImageLatestPath(token,"ci")
        sh "echo '${newPath}' > /home/jenkins/workspace/data/originPath"
-       println("##The new Path is : "+newPath)
   }
 //部署新镜像到测试环境
   stage('upgrade service') {
     def status_code = updateCombServiceImage(token,microserviceId,container_id,newPath)
-    println("#######"+status_code)
     assert status_code == "200"
     def isready = waitCombServiceReady(token,microserviceId)
     assert isready 
